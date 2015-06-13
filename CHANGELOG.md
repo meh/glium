@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - Renamed and changed `UniformBlockMember` to `BlockLayout`.
  - Fixed a potential `GL_INVALID_ENUM` error generated at initialization.
  - Fixed `get_internal_format_if_supported()` sometimes panicking.
 
