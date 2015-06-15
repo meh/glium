@@ -11,6 +11,8 @@ use std::mem;
 use cgmath;
 #[cfg(feature = "nalgebra")]
 use nalgebra;
+#[cfg(feature = "image")]
+use image;
 
 /// Type of a uniform in a program.
 #[allow(missing_docs)]
@@ -769,4 +771,64 @@ impl AsUniformValue for cgmath::Point3<f32> {
     fn matches(ty: &UniformType) -> bool {
         ty == &UniformType::FloatVec3
     }
+}
+
+#[cfg(feature = "image")]
+impl AsUniformValue for image::Luma<u8> {
+  fn as_uniform_value(&self) -> UniformValue {
+    use image::Pixel;
+    let px = self.to_rgb();
+
+    UniformValue::Vec3([px[0] as f32 / 255.0,
+                        px[1] as f32 / 255.0,
+                        px[2] as f32 / 255.0])
+  }
+
+  fn matches(ty: &UniformType) -> bool {
+    ty == &UniformType::FloatVec3
+  }
+}
+
+#[cfg(feature = "image")]
+impl AsUniformValue for image::LumaA<u8> {
+  fn as_uniform_value(&self) -> UniformValue {
+    use image::Pixel;
+    let px = self.to_rgba();
+
+    UniformValue::Vec4([px[0] as f32 / 255.0,
+                        px[1] as f32 / 255.0,
+                        px[2] as f32 / 255.0,
+                        px[3] as f32 / 255.0])
+  }
+
+  fn matches(ty: &UniformType) -> bool {
+    ty == &UniformType::FloatVec4
+  }
+}
+
+#[cfg(feature = "image")]
+impl AsUniformValue for image::Rgb<u8> {
+  fn as_uniform_value(&self) -> UniformValue {
+    UniformValue::Vec3([self[0] as f32 / 255.0,
+                        self[1] as f32 / 255.0,
+                        self[2] as f32 / 255.0])
+  }
+
+  fn matches(ty: &UniformType) -> bool {
+    ty == &UniformType::FloatVec3
+  }
+}
+
+#[cfg(feature = "image")]
+impl AsUniformValue for image::Rgba<u8> {
+  fn as_uniform_value(&self) -> UniformValue {
+    UniformValue::Vec4([self[0] as f32 / 255.0,
+                        self[1] as f32 / 255.0,
+                        self[2] as f32 / 255.0,
+                        self[3] as f32 / 255.0])
+  }
+
+  fn matches(ty: &UniformType) -> bool {
+    ty == &UniformType::FloatVec4
+  }
 }
